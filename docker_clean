@@ -10,34 +10,18 @@ require 'docker'
 require 'optparse'
 
 options = {}
-options[:registry] = ENV["REGISTRY"]
-options[:prefix] = ENV["PREFIX"]
 options[:url] = ENV["URL"]
 
 OptionParser.new do |opts|
   opts.banner = "Usage: docker_clean [options]"
 
-  opts.on("-pPREFIX", "--prefix=PREFIX", "Prefix of images your want to clean") do |r|
-    options[:prefix] = r
-  end
-  opts.on("-rREGISTRY", "--registry=REGISTRY", "Registry") do |r|
-    options[:registry] = r
-  end
   opts.on("-uURL", "--url=URL", "Docker Host URL") do |r|
     options[:url] = r
   end
 end.parse!
 
-if options[:registry].nil?
-  puts "--registry|-r option should be filled"
-  exit -1
-end
-if options[:url].nil?
-    options[:url] = "http://localhost:4243"
-end
-
 Docker.url = options[:url]
 
 require 'docker_cleaner'
 
-DockerCleaner.run options[:registry], options[:prefix]
+DockerCleaner.run 

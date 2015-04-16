@@ -1,9 +1,5 @@
 module DockerCleaner
 class Images
-  def initialize registry, prefix
-    @prefix = prefix || ""
-    @registry = registry
-  end
 
   def run
     clean_old_images
@@ -19,56 +15,30 @@ class Images
         image.remove
       rescue Docker::Error::NotFoundError
       rescue Excon::Errors::Conflict => e
-        puts "Conflict when removing #{image.id[0...10]}"
-        puts " !     #{e.response.body}"
+        puts "   #{e.response.body}"
       end
     end
   end
 
   def clean_old_images
-    apps = images_with_latest
-    apps.each do |app, images|
-      if app =~ /.*-tmax$/
-        next
-      end
-      images.each do |i|
-        unless i.info["Created"] == apps["#{app}-tmax"]
-          puts "Remove #{i.info['RepoTags'][0]} => #{i.id[0...10]}"
-          begin
-            i.remove
-          rescue Docker::Error::NotFoundError
-          rescue Excon::Errors::Conflict => e
-            puts "Conflict when removing #{i.info['RepoTags'][0]} - ID: #{i.id[0...10]}"
-            puts " !     #{e.response.body}"
-          end
+    one_week_ago = Time.now.to_i - 7 * 24 * 3600
+    Docker::Image.all.each do |image|
+      if image.info["Created"].to_i < one_week_ago
+        begin    
+          puts "Deleting image #{image.id[0..10]} since was created #{image.info} more than one week ago."
+          puts "   Tags: #{image.info['RepoTags']}"
+          image.remove(:force => true)
+        rescue Docker::Error::NotFoundError
+        rescue Excon::Errors::Conflict => e
+          puts "   Conflict when removing #{i.info['RepoTags'][0]} - ID: #{i.id[0...10]}"
+          puts "   !     #{e.response.body}"
         end
+        puts "... Done"
+      else
+        puts "Ignoring image #{image.id[0..10]} since was created less than one week ago."
+        puts "   Tags: #{image.info['RepoTags']}"
       end
-    end
-  end
-
-  def images_with_latest
-    images ||= Docker::Image.all
-    apps = {}
-
-    images.each do |i|
-      if i.info["RepoTags"][0] =~ /^#{@registry}\/#{@prefix}/
-        name = i.info["RepoTags"][0].split(":")[0]
-        tmax = "#{name}-tmax"
-
-        if apps[name].nil?
-          apps[name] = [i]
-        else
-          apps[name] << i
-        end
-      
-        if apps[tmax].nil?
-          apps[tmax] = i.info["Created"]
-        elsif apps[tmax] < i.info["Created"]
-          apps[tmax] = i.info["Created"]
-        end
-      end
-    end
-    apps
+    end 
   end
 end
 end
