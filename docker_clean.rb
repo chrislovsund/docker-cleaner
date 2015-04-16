@@ -5,6 +5,7 @@ $LOAD_PATH << path
 
 require 'rubygems'
 require 'bundler/setup'
+
 Bundler.require :default
 require 'docker'
 require 'optparse'
@@ -24,4 +25,4 @@ Docker.url = options[:url]
 
 require 'docker_cleaner'
 
-DockerCleaner.run 
+DockerCleaner.run
