@@ -1,8 +1,9 @@
 module DockerCleaner
   class Images
     def run
-      clean_old_images
-      clean_unnamed_images
+    Excon.defaults[:read_timeout] = 120
+    clean_old_images
+    clean_unnamed_images
     end
 
     def clean_unnamed_images
