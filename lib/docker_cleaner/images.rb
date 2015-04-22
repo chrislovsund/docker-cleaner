@@ -21,9 +21,8 @@ module DockerCleaner
     end
 
     def clean_old_images
-#      one_week_ago = Time.now.to_i - 7 * 24 * 3600
       Docker::Image.all.each do |image|
-#        if image.info["Created"].to_i < one_week_ago
+        if !["ruby:2.1-onbuild", "chrislovsund/docker-cleaner:latest"].include?(image.info["RepoTags"][0])
           begin
             puts "Deleting image #{image.id[0..10]}."
             puts "   Info: #{image.info}"
@@ -35,10 +34,10 @@ module DockerCleaner
             puts "   !     #{e.response.body}"
           end
           puts "... Done"
-#        else
-#          puts "Ignoring image #{image.id[0..10]} since was created less than one week ago."
-#          puts "   Tags: #{image.info['RepoTags']}"
- #       end
+        else
+          puts "Ignoring image #{image.id[0..10]} since it is white listed."
+          puts "   Tags: #{image.info['RepoTags']}"
+       end
       end
     end
   end
