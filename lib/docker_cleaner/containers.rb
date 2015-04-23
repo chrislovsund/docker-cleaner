@@ -8,7 +8,7 @@ module DockerCleaner
           container.remove
           $stdout.write "... OK\n"
         rescue Docker::Error::ServerError => e
-          puts "   !     #{e.response.body}"
+          puts "   ! ServerError #{e}"
         rescue Docker::Error::TimeoutError => e
           puts "   Timeout when removing #{container.id[0...10]} - #{container.info["Image"]} - #{container.info["Names"][0]}"
           puts "   !     #{e.response.body}"
