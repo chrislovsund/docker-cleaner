@@ -1,5 +1,5 @@
 # docker-cleaner
-Small ruby script to remove containers and images older than one week.
+Small ruby script to remove containers and images not running and being used.
 
 Can be run in ruby environment or use bash script to run inside [docker image ruby:2.1-onbuild](https://registry.hub.docker.com/_/ruby/) (inspired by [meltwater/docker-cleanup](https://github.com/meltwater/docker-cleanup)).
 
