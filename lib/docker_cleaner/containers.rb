@@ -11,7 +11,7 @@ module DockerCleaner
           puts "   ! ServerError #{e}"
         rescue Docker::Error::TimeoutError => e
           puts "   Timeout when removing #{container.id[0...10]} - #{container.info["Image"]} - #{container.info["Names"][0]}"
-          puts "   !     #{e.response.body}"
+          puts "   !     #{e}"
         rescue Docker::Error::NotFoundError => e
           puts "   !     #{e.response.body}"
         rescue Excon::Errors::Conflict => e
