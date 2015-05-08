@@ -31,7 +31,7 @@ module DockerCleaner
             image.remove(:force => true)
           rescue Docker::Error::TimeoutError => e
             puts "   Timeout when removing #{image.info['RepoTags'][0]} - ID: #{image.id[0...10]}"
-            puts "   !     #{e.response.body}"
+            puts "   !     #{e}"
           rescue Docker::Error::NotFoundError => e
             puts "   !     #{e.response.body}"
           rescue Excon::Errors::Conflict => e
