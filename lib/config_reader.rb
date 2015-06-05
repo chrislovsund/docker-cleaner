@@ -14,7 +14,11 @@ class ConfigReader
     rescue Errno::ENOENT => e
       puts "   !     #{e}"
     end
-    default_whitelist_images = ["ruby:2.1-onbuild", "chrislovsund/docker-cleaner:latest"]
+    default_whitelist_images = [
+      "ruby:2.1-onbuild",
+      "chrislovsund/docker-cleaner:latest",
+      "docker.io/chrislovsund/docker-cleaner:latest"
+    ]
     @whitelist_images = (default_whitelist_images + custom_whitelist_images)
   end
 
