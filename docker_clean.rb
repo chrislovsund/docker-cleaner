@@ -9,6 +9,7 @@ require 'bundler/setup'
 Bundler.require :default
 require 'docker'
 require 'optparse'
+require 'pp'
 
 options = {}
 options[:url] = ENV["URL"]
@@ -24,5 +25,7 @@ end.parse!
 Docker.url = options[:url]
 
 require 'docker_cleaner'
+config = ConfigReader.new (File.dirname(__FILE__) + '/config/config.json')
+pp config
 
-DockerCleaner.run
+DockerCleaner.run config

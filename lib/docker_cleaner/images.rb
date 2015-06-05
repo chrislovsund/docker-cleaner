@@ -1,5 +1,11 @@
+require 'config_reader'
+
 module DockerCleaner
   class Images
+    def initialize config
+      @config = config || ""
+    end
+
     def run
       Excon.defaults[:read_timeout] = 180
       clean_old_images
@@ -23,7 +29,7 @@ module DockerCleaner
 
     def clean_old_images
       Docker::Image.all.each do |image|
-        if !["ruby:2.1-onbuild", "chrislovsund/docker-cleaner:latest"].include?(image.info["RepoTags"][0])
+        if ! @config.whitelist_images.include?(image.info["RepoTags"][0])
           begin
             puts "Deleting image #{image.id[0..10]}."
             puts "   Info: #{image.info}"
