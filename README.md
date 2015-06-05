@@ -10,8 +10,8 @@ docker run --privileged \
   chrislovsund/docker-cleaner:latest
 ```
 
-### Command Line with own config
-config.json file that have to located in folder below.
+### Command Line with custom config
+*config.json* file that have to located in folder *config* in example below.
 ```
 docker run --privileged \
   -v /var/run/docker.sock:/var/run/docker.sock:rw \
