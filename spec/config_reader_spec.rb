@@ -7,9 +7,9 @@ describe ConfigReader do
     @config_reader = ConfigReader.new (File.dirname(__FILE__) + '/fixtures/config.json')
   end
 
-  it "should be 5 whitelist images" do
-    expect(@config_reader.whitelist_images.size).to eq 5
-    expect(@config_reader.whitelist_images.size).to eq 5
+  it "should be 6 whitelist images" do
+    expect(@config_reader.whitelist_images.size).to eq 6
+    expect(@config_reader.whitelist_images.size).to eq 6
   end
 
   it "should contain image1" do

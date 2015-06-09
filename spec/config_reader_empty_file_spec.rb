@@ -7,9 +7,9 @@ describe ConfigReader do
     @config_reader = ConfigReader.new (File.dirname(__FILE__) + '/fixtures/config_empty.json')
   end
 
-  it "should be 2 whitelist images" do
-    expect(@config_reader.whitelist_images.size).to eq 2
-    expect(@config_reader.whitelist_images.size).to eq 2
+  it "should be 3 whitelist images" do
+    expect(@config_reader.whitelist_images.size).to eq 3
+    expect(@config_reader.whitelist_images.size).to eq 3
   end
 
   it "should contain chrislovsund/docker-cleaner:latest" do
