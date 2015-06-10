@@ -8,24 +8,22 @@ module DockerCleaner
 
     def run
       Excon.defaults[:read_timeout] = 180
-      total_number_of_images = Docker::Image.all.size
+      total_number_of_images = Docker::Image.all.size + 1
       number_of_images_cleaned = 0
       puts "Start cleaning of #{total_number_of_images} found images ..."
 
       Docker::Image.all.each do |image|
         if ! @config.whitelist_images.include?(image.info["RepoTags"][0])
           begin
-            puts "Deleting image #{image.id[0..10]}."
-            puts "   Info: #{image.info}"
-            puts "   Tags: #{image.info['RepoTags']}"
+            puts "Trying to remove image #{image.id[0..10]} - RepoTags: #{image.info['RepoTags']}"
             image.remove(:force => true)
           rescue Docker::Error::TimeoutError => e
-            puts "   Timeout when removing #{image.info['RepoTags'][0]} - ID: #{image.id[0...10]}"
+            puts "   Timeout when removing #{image.info['RepoTags']} - ID: #{image.id[0...10]}"
             puts "   !     #{e}"
           rescue Docker::Error::NotFoundError => e
             puts "   !     #{e.response.body}"
           rescue Excon::Errors::Conflict => e
-            puts "   Conflict when removing #{image.info['RepoTags'][0]} - ID: #{image.id[0...10]}"
+            puts "   Conflict when removing #{image.info['RepoTags']} - ID: #{image.id[0...10]}"
             puts "   !     #{e.response.body}"
           end
           number_of_images_cleaned += 1
