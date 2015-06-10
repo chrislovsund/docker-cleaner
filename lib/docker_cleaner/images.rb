@@ -16,7 +16,7 @@ module DockerCleaner
         if ! @config.whitelist_images.include?(image.info["RepoTags"][0])
           begin
             puts "Trying to remove image #{image.id[0..10]} - RepoTags: #{image.info['RepoTags']}"
-            image.remove(:force => true)
+            image.remove
           rescue Docker::Error::TimeoutError => e
             puts "   Timeout when removing #{image.info['RepoTags']} - ID: #{image.id[0...10]}"
             puts "   !     #{e}"
