@@ -8,26 +8,10 @@ module DockerCleaner
 
     def run
       Excon.defaults[:read_timeout] = 180
-      clean_old_images
-      clean_unnamed_images
-    end
+      total_number_of_images = Docker::Image.all.size
+      number_of_images_cleaned = 0
+      puts "Start cleaning of #{total_number_of_images} found images ..."
 
-    def clean_unnamed_images
-      Docker::Image.all.select do |image|
-        image.info["RepoTags"][0] == "<none>:<none>"
-      end.each do |image|
-        puts "Remove unnamed image #{image.id[0...10]}"
-        begin
-          image.remove
-        rescue Docker::Error::NotFoundError => e
-          puts "   !     #{e.response.body}"
-        rescue Excon::Errors::Conflict => e
-          puts "   #{e.response.body}"
-        end
-      end
-    end
-
-    def clean_old_images
       Docker::Image.all.each do |image|
         if ! @config.whitelist_images.include?(image.info["RepoTags"][0])
           begin
@@ -44,12 +28,14 @@ module DockerCleaner
             puts "   Conflict when removing #{image.info['RepoTags'][0]} - ID: #{image.id[0...10]}"
             puts "   !     #{e.response.body}"
           end
-          puts "... Done"
+          number_of_images_cleaned += 1
+          puts "so far #{number_of_images_cleaned} of #{total_number_of_images} have been removed."
         else
           puts "Ignoring image #{image.id[0..10]} since it is white listed."
           puts "   Tags: #{image.info['RepoTags']}"
         end
       end
+      puts "Image cleaning completed, removed #{number_of_images_cleaned} of #{total_number_of_images} images."
     end
   end
 end
