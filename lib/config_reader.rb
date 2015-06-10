@@ -15,8 +15,7 @@ class ConfigReader
       puts "   !     #{e}"
     end
     default_whitelist_images = [
-      "ruby:2.1-onbuild",
-      "chrislovsund/docker-cleaner:latest",
+      "docker.io/ruby:2.1-onbuild",
       "docker.io/chrislovsund/docker-cleaner:latest"
     ]
     @whitelist_images = (default_whitelist_images + custom_whitelist_images)
