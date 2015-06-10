@@ -1,9 +1,0 @@
-{
-    "whitelist": {
-        "images": [
-            "docker-cleaner-image:latest",
-            "docker.io/centos:latest",
-            "docker-river.got.jeppesensystems.com:5000/devops/gocd-agent:latest"
-        ]
-    }
-}
