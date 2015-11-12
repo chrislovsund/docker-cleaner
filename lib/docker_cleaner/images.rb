@@ -17,6 +17,7 @@ module DockerCleaner
           begin
             puts "Trying to remove image #{image.id[0..10]} - RepoTags: #{image.info['RepoTags']}"
             image.remove
+            number_of_images_cleaned += 1
           rescue Docker::Error::TimeoutError => e
             puts "   Timeout when removing #{image.info['RepoTags']} - ID: #{image.id[0...10]}"
             puts "   !     #{e}"
@@ -26,7 +27,6 @@ module DockerCleaner
             puts "   Conflict when removing #{image.info['RepoTags']} - ID: #{image.id[0...10]}"
             puts "   !     #{e.response.body}"
           end
-          number_of_images_cleaned += 1
           puts "so far #{number_of_images_cleaned} of #{total_number_of_images} have been removed."
         else
           puts "Ignoring image #{image.id[0..10]} since it is white listed."
