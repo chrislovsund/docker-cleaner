@@ -16,7 +16,7 @@ module DockerCleaner
         if ! @config.whitelist_images.include?(image.info["RepoTags"][0])
           begin
             puts "Trying to remove image #{image.id[0..10]} - RepoTags: #{image.info['RepoTags']}"
-            image.remove
+            image.remove(:force => true)
             number_of_images_cleaned += 1
           rescue Docker::Error::TimeoutError => e
             puts "   Timeout when removing #{image.info['RepoTags']} - ID: #{image.id[0...10]}"
@@ -26,9 +26,10 @@ module DockerCleaner
           rescue Excon::Errors::Conflict => e
             puts "   Conflict when removing #{image.info['RepoTags']} - ID: #{image.id[0...10]}"
             puts "   !     #{e.response.body}"
-            puts "Trying to remove image with force"
-            image.remove(:force => true)
-            number_of_images_cleaned += 1
+          rescue Exception => e
+            puts "   Exception when removing #{image.info['RepoTags']} - ID: #{image.id[0...10]}"
+            puts "   !     #{e}"
+            raise e
           end
           puts "so far #{number_of_images_cleaned} of #{total_number_of_images} have been removed."
         else
