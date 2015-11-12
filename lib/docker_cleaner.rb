@@ -4,6 +4,7 @@ require 'config_reader'
 
 module DockerCleaner
   def self.run(config)
+    $stdout.sync = true
     DockerCleaner::Containers.new.run
     DockerCleaner::Images.new(config).run
   end
