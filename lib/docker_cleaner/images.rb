@@ -22,7 +22,7 @@ module DockerCleaner
             puts "   Timeout when removing #{image.info['RepoTags']} - ID: #{image.id[0...10]}"
             puts "   !     #{e}"
           rescue Docker::Error::NotFoundError => e
-            puts "   !     #{e.response.body}"
+            puts "   !     #{e}"
           rescue Excon::Errors::Conflict => e
             puts "   Conflict when removing #{image.info['RepoTags']} - ID: #{image.id[0...10]}"
             puts "   !     #{e.response.body}"
